@@ -66,8 +66,6 @@ TEMPLATES = [
         },
     },
 ]
-
-
 WSGI_APPLICATION = 'cre8x.wsgi.application'
 ASGI_APPLICATION = 'cre8x.asgi.application'
 
