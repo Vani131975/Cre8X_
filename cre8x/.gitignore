@@ -1,0 +1,10 @@
+# Ignore virtual environment and dependencies
+cre8x_env/
+*.dll
+*.pyd
+*.so
+*.exe
+
+# Ignore system files
+.DS_Store
+Thumbs.db
