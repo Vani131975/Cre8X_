@@ -23,6 +23,7 @@ breadability==0.1.20
 cachetools==5.5.0
 certifi==2024.7.4
 cffi==1.17.0
+channels
 channels==4.2.0
 channels_redis==4.2.1
 chardet==5.2.0
@@ -43,6 +44,7 @@ decorator==5.1.1
 deepface==0.0.93
 defusedxml==0.7.1
 distro==1.9.0
+django
 Django==5.1.6
 django-widget-tweaks==1.5.0
 dnspython==2.7.0
