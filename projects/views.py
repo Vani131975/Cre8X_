@@ -165,7 +165,6 @@ def invite_user(request, project_id):
     else:
         form = InvitationForm(project)
     
-    # Get recommended users for the project
     recommended_users = ProjectRecommender.recommend_users_for_project(project)
     
     context = {
@@ -189,7 +188,6 @@ def respond_to_invitation(request, invitation_id, action):
     if action == 'accept':
         invitation.accept()
         
-        # Create notification for sender
         Notification.objects.create(
             recipient=invitation.sender,
             sender=request.user,
@@ -203,7 +201,6 @@ def respond_to_invitation(request, invitation_id, action):
     elif action == 'decline':
         invitation.reject()
         
-        # Create notification for sender
         Notification.objects.create(
             recipient=invitation.sender,
             sender=request.user,
@@ -221,7 +218,6 @@ def mark_project_completed(request, project_id):
     """Mark a project as completed"""
     project = get_object_or_404(Project, id=project_id)
     
-    # Only project creator can mark as completed
     if project.created_by != request.user:
         messages.error(request, 'You do not have permission to mark this project as completed.')
         return redirect('project_detail', project_id=project.id)
@@ -229,7 +225,6 @@ def mark_project_completed(request, project_id):
     if request.method == 'POST':
         project.mark_completed()
         
-        # Create notifications for team members
         team_members = TeamMember.objects.filter(project=project)
         for member in team_members:
             if member.user != request.user:
@@ -252,13 +247,11 @@ def report_user(request, project_id, user_id):
     project = get_object_or_404(Project, id=project_id)
     reported_user = get_object_or_404(CustomUser, id=user_id)
     
-    # Check if user is part of the project
     if not (project.created_by == request.user or 
             TeamMember.objects.filter(project=project, user=request.user).exists()):
         messages.error(request, 'You must be part of the project to report a user.')
         return redirect('project_detail', project_id=project.id)
     
-    # Check if reported user is part of the project
     if not (project.created_by == reported_user or 
             TeamMember.objects.filter(project=project, user=reported_user).exists()):
         messages.error(request, 'The reported user must be part of the project.')

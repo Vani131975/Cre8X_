@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Invite a User to {{ project.name }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Invitation</button>
+</form>
+
+<h3>Recommended Users</h3>
+<ul>
+    {% for user, score in recommended_users %}
+        <li>{{ user.username }} (Match Score: {{ score }})</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,38 @@
+/* Add these styles to your project's CSS */
+
+/* Notification list styling */
+.notification-list .unread {
+    position: relative;
+}
+
+.notification-list .unread::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    background-color: #0d6efd;
+    border-radius: 50%;
+    position: absolute;
+    top: 15px;
+    left: -4px;
+}
+
+/* Animation for new notifications */
+@keyframes notification-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.new-notification {
+    animation: notification-pulse 1s ease-in-out;
+}
+
+/* Toast notification styling */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 350px;
+}

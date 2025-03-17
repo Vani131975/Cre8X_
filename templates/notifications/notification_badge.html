@@ -1,0 +1,33 @@
+<!-- notifications/notification_badge.html -->
+{% with unread_count=request.user.notifications.filter(is_read=False).count %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-bell"></i>
+        {% if unread_count > 0 %}
+            <span class="badge bg-danger">{{ unread_count }}</span>
+        {% endif %}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" style="width: 300px;">
+        <li><h6 class="dropdown-header">Notifications</h6></li>
+        {% with recent_notifications=request.user.notifications.all|slice:":5" %}
+            {% if recent_notifications %}
+                {% for notification in recent_notifications %}
+                    <li>
+                        <a class="dropdown-item {% if not notification.is_read %}fw-bold{% endif %}" href="{% url 'mark_notification_read' notification.id %}">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ notification.get_notification_type_display }}</span>
+                                <small class="text-muted">{{ notification.created_at|timesince }}</small>
+                            </div>
+                            <small>{{ notification.content|truncatechars:50 }}</small>
+                        </a>
+                    </li>
+                {% endfor %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-center" href="{% url 'notification_list' %}">View all notifications</a></li>
+            {% else %}
+                <li><span class="dropdown-item text-muted">No notifications</span></li>
+            {% endif %}
+        {% endwith %}
+    </ul>
+</li>
+{% endwith %}

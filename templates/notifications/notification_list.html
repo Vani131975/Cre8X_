@@ -1,0 +1,104 @@
+<!-- notifications/notification_list.html -->
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Notifications</h1>
+                {% if notifications|length > 0 %}
+                <form method="post" action="{% url 'mark_all_read' %}" id="mark-all-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-secondary">Mark All as Read</button>
+                </form>
+                {% endif %}
+            </div>
+
+            {% if notifications %}
+                <div class="list-group notification-list">
+                    {% for notification in notifications %}
+                        <div class="list-group-item list-group-item-action {% if not notification.is_read %}list-group-item-primary unread{% endif %}">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <h5 class="mb-1">{{ notification.get_notification_type_display }}</h5>
+                                <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                            </div>
+                            <p class="mb-1">{{ notification.content }}</p>
+                            <div class="d-flex justify-content-between mt-2">
+                                {% if notification.related_project %}
+                                    <a href="{% url 'project_detail' notification.related_project.id %}" class="btn btn-sm btn-primary">View Project</a>
+                                {% endif %}
+                                {% if not notification.is_read %}
+                                    <form method="post" action="{% url 'mark_notification_read' notification.id %}" class="mark-read-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Mark as Read</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    You don't have any notifications yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle mark as read for individual notifications
+        document.querySelectorAll('.mark-read-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('action');
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        this.closest('.list-group-item').classList.remove('list-group-item-primary', 'unread');
+                        this.remove();
+                    }
+                });
+            });
+        });
+
+        // Handle mark all as read
+        const markAllForm = document.getElementById('mark-all-form');
+        if (markAllForm) {
+            markAllForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                fetch(this.getAttribute('action'), {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.querySelectorAll('.notification-list .unread').forEach(item => {
+                            item.classList.remove('list-group-item-primary', 'unread');
+                            const form = item.querySelector('.mark-read-form');
+                            if (form) form.remove();
+                        });
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

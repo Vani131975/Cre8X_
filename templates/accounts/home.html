@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %}Welcome to Cre8X{% endblock %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-md-6">
+        <h1 class="display-4">Welcome to Cre8X</h1>
+        <p class="lead">The platform where creativity meets collaboration.</p>
+        <p>Find projects that match your skills, connect with like-minded creators, and bring your ideas to life!</p>
+        
+        {% if not user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{% url 'register' %}" class="btn btn-primary me-2">Sign Up Now</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary">Login</a>
+        </div>
+        {% else %}
+        <div class="mt-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-success">Go to Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <img src="{% static 'images/collaboration.jpg' %}" alt="Collaboration" class="img-fluid rounded shadow-lg" onerror="this.src='https://placehold.co/600x400?text=Cre8X+Collaboration'">
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3 class="card-title">Find Projects</h3>
+                <p class="card-text">Discover creative projects that match your skills and interests.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3 class="card-title">Connect with Creators</h3>
+                <p class="card-text">Build your network and collaborate with other talented individuals.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3 class="card-title">Showcase Your Work</h3>
+                <p class="card-text">Create a portfolio of your contributions and highlight your expertise.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

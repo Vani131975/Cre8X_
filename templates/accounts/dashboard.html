@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Cre8X{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Welcome, {{ user.username }}!</h1>
+
+{% if unread_notifications %}
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <strong>You have {{ unread_notifications|length }} unread notification{{ unread_notifications|length|pluralize }}!</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">My Projects</h3>
+                <a href="#" class="btn btn-light btn-sm">Create New Project</a>
+            </div>
+            <div class="card-body">
+                {% if created_projects %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Category</th>
+                                <th>Team Size</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in created_projects %}
+                            <tr>
+                                <td>{{ project.title }}</td>
+                                <td>{{ project.category }}</td>
+                                <td>{{ project.team_members.count }}</td>
+                                <td>{{ project.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Manage</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center py-3">You haven't created any projects yet. <a href="#">Create your first project</a>!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Projects I've Joined</h3>
+            </div>
+            <div class="card-body">
+                {% if joined_projects %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Created By</th>
+                                <th>Category</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in joined_projects %}
+                            <tr>
+                                <td>{{ project.title }}</td>
+                                <td>{{ project.created_by.username }}</td>
+                                <td>{{ project.category }}</td>
+                                <td>{{ project.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center py-3">You haven't joined any projects yet. <a href="#">Explore projects</a> to find something interesting!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {% if pending_invitations %}
+        <div class="card mb-4">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0">Pending Invitations</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for invitation in pending_invitations %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ invitation.project.title }}</strong><br>
+                                <small>From: {{ invitation.sent_by.username }}</small>
+                            </div>
+                            <div>
+                                <a href="#" class="btn btn-sm btn-success me-1">Accept</a>
+                                <a href="#" class="btn btn-sm btn-danger">Decline</a>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Recommended For You</h4>
+            </div>
+            <div class="card-body">
+                {% if recommended_projects %}
+                <div class="list-group">
+                    {% for project in recommended_projects %}
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ project.title }}</h5>
+                            <small>{{ project.created_at|date:"M d" }}</small>
+                        </div>
+                        <p class="mb-1">{{ project.description|truncatechars:80 }}</p>
+                        <small>By: {{ project.created_by.username }}</small>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center py-3">No recommendations available at this time. Check back later!</p>
+                {% endif %}
+            </div>
+            <div class="card-footer text-center">
+                <a href="#" class="btn btn-outline-primary">Explore More Projects</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">Your Skills</h4>
+            </div>
+            <div class="card-body">
+                {% if user.skills.all %}
+                <div class="d-flex flex-wrap gap-1">
+                    {% for skill in user.skills.all %}
+                    <span class="badge bg-primary">{{ skill.name }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center py-2">You haven't added any skills yet.</p>
+                {% endif %}
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-sm">Update Skills</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

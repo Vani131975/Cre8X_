@@ -9,48 +9,18 @@ class CustomUserCreationForm(UserCreationForm):
     phone_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}))
-    skills = forms.ModelMultipleChoiceField(
-        queryset=Skill.objects.all(),
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
-        required=False
-    )
-    new_skills = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Add new skills (comma separated)'}),
-        required=False
-    )
     
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'phone_number', 'password1', 'password2', 'skills')
+        fields = ('username', 'email', 'phone_number', 'password1', 'password2')
     
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
-        # Simple validation to ensure it contains only digits
         if not phone_number.isdigit():
             raise ValidationError('Phone number should contain only digits.')
         return phone_number
     
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
-        user.phone_number = self.cleaned_data['phone_number']
-        
-        if commit:
-            user.save()
-            
-            # Add existing skills
-            if self.cleaned_data.get('skills'):
-                user.skills.set(self.cleaned_data['skills'])
-            
-            # Process and add new skills
-            if self.cleaned_data.get('new_skills'):
-                skill_names = [s.strip() for s in self.cleaned_data['new_skills'].split(',') if s.strip()]
-                for skill_name in skill_names:
-                    skill, created = Skill.objects.get_or_create(name=skill_name)
-                    user.skills.add(skill)
-        
-        return user
-
+    
 class CustomLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
@@ -67,26 +37,26 @@ class ProfileUpdateForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Add new skills (comma separated)'}),
         required=False
     )
-    
+
     class Meta:
         model = CustomUser
         fields = ('bio', 'profile_image', 'skills')
-    
+
     def save(self, commit=True):
         user = super().save(commit=False)
-        
+
         if commit:
             user.save()
-            
-            # Add existing skills
+
             if self.cleaned_data.get('skills'):
                 user.skills.set(self.cleaned_data['skills'])
-            
-            # Process and add new skills
+
             if self.cleaned_data.get('new_skills'):
                 skill_names = [s.strip() for s in self.cleaned_data['new_skills'].split(',') if s.strip()]
                 for skill_name in skill_names:
                     skill, created = Skill.objects.get_or_create(name=skill_name)
                     user.skills.add(skill)
-        
+
         return user
+    
+
