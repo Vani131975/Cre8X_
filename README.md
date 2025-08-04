@@ -73,4 +73,4 @@ GitHub/Trello integrations
 
 Public project discovery feed
 
-Feedback-driven collaborator ratings
+Feedback-driven collaborator rating
