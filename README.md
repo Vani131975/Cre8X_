@@ -3,10 +3,12 @@
 Cre8X — AI-Powered Project Collaboration Platform
 A smart platform for creators and developers to collaborate on real-world projects with intelligent role matching, team formation, and seamless communication.
 
-🌟 Project Overview
+### Project Overview
+
 Cre8X is a Django-based web platform that enables users to post projects, define required roles, and receive AI-verified collaborator suggestions. It streamlines the collaboration process by helping users form effective teams based on profile compatibility and project needs.
 
-⚙️ Tech Stack
+### Tech Stack
+
 Django (Python)
 
 SQLite (Built-in)
@@ -15,7 +17,8 @@ Django Templates (HTML/CSS)
 
 Custom AI logic for profile-role matching
 
-🔑 Features
+### Features
+
 Post projects with detailed role requirements
 
 Receive and manage join requests
@@ -26,13 +29,17 @@ In-app messaging for collaboration
 
 User authentication and dashboard
 
-🚀 How to Run Locally
+### How to Run Locally
+
 Clone the repository:
 git clone https://github.com/Vani131975/Cre8X_.git
+
 cd cre8x
 
 Create and activate a virtual environment:
+
 python -m venv venv
+
 source venv/bin/activate (Windows: venv\Scripts\activate)
 
 Install dependencies:
@@ -47,7 +54,7 @@ python manage.py runserver
 Open in browser:
 http://localhost:8000
 
-🧠 How AI Matching Works
+### How AI Matching Works
 
 Analyzes user profiles based on listed skills, roles, and experience
 
@@ -55,7 +62,7 @@ Compares against project requirements and role descriptions
 
 Scores applicants and recommends the best match to the project owner
 
-📌 Use Cases
+### Use Cases
 
 Side project collaboration
 
@@ -65,7 +72,7 @@ Startup MVP team building
 
 Open-source contributor matching
 
-🛠️ Future Enhancements
+### Future Enhancements
 
 Advanced AI matching with ML
 
@@ -73,4 +80,4 @@ GitHub/Trello integrations
 
 Public project discovery feed
 
-Feedback-driven collaborator rating
+Feedback-driven collaborator ratings
